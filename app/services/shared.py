@@ -39,5 +39,7 @@ def run_sql(sql, params=None, commit=False, fetchone = False):
     except Exception as e:
         print "EXCEPTION:~~~~_~~_~_~_~_"
         print "ERROR: {0}".format(e)
+        print "SQL: {0}".format(sql)
+        print "params: {0}".format(params)
     finally:
         connection.close()

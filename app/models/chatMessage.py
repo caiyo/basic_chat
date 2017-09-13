@@ -1,6 +1,7 @@
 import uuid
 from app.services import shared
 
+
 class ChatMessage(object):
 
     def __init__(self, msg, group_id, created_by, username=None, msg_id=None):
@@ -39,5 +40,5 @@ class ChatMessage(object):
             params = (on_or_after)
         sql = sql.format(and_clause, limit)
         results = shared.run_sql(sql, params)
-        msgs = [User(r.msg, group_id, r.user_guid, r.username, r.msg_id) for r in results]
+        msgs = [ChatMessage(r.msg, group_id, r.user_guid, r.username, r.msg_id) for r in results]
         return msgs

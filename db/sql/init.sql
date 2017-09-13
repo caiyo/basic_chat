@@ -2,10 +2,6 @@ CREATE DATABASE challenge_kyle;
 
 USE challenge_kyle;
 
-CREATE TABLE test(col VARCHAR(10));
-
-INSERT INTO test(col) VALUES('ok');
-
 CREATE TABLE user(
     user_guid varchar(36) NOT NULL PRIMARY KEY,
     username varchar(50) NOT NULL UNIQUE,
@@ -24,16 +20,20 @@ CREATE TABLE chat_group(
     created_by varchar(36),
     created_when datetime NOT NULL,
     updated_when datetime NOT NULL,
-    deleted_when datetime NOT NULL '2050-01-01'
+    deleted_when datetime NOT NULL DEFAULT '2050-01-01'
 );
+
+INSERT INTO chat_group(group_id, group_name, is_public, created_by, created_when, updated_when)
+VALUES(uuid(), 'General', 1, 'root', now(), now());
 
 CREATE TABLE chat_group_members(
     members_id varchar(36) NOT NULL PRIMARY KEY,
     group_id varchar(36) NOT NULL,
     user_id varchar(36) NOT NULL,
+    last_viewed datetime,  
     created_when datetime NOT NULL,
     updated_when datetime NOT NULL,
-    deleted_when datetime NOT NULL '2050-01-01'
+    deleted_when datetime NOT NULL DEFAULT '2050-01-01'
 );
 
 
@@ -44,5 +44,7 @@ CREATE TABLE chat_message(
     message text,
     created_when datetime NOT NULL,
     updated_when datetime NOT NULL,
-    deleted_when datetime NOT NULL '2050-01-01'
+    deleted_when datetime NOT NULL DEFAULT '2050-01-01'
 );
+
+select * from chat_group;

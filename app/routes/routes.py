@@ -1,9 +1,6 @@
 from app import app
-from app.services import userservice, shared
+from app.services import userservice, shared, chat_group_service
 from app.models.exception import UserExistsException
-import pymysql
-import pymysql.cursors
-import flask
 from flask import request, make_response 
 from flask_jwt import JWT, jwt_required, current_identity
 import json
@@ -24,6 +21,10 @@ def create_user():
     try:
         created_user = userservice.create_user(username, password, confirm_password)
 
+        # After user is created, add them to the 'General' group which is
+        # the default group for all users
+        general_group = chat_group_service.get_group(group_name='General')
+        created_user.join_group(general_group.id)
     except UserExistsException as uee:
         return make_response((str(uee), 403, None))
     
