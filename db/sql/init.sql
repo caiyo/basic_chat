@@ -46,5 +46,3 @@ CREATE TABLE chat_message(
     updated_when datetime NOT NULL,
     deleted_when datetime NOT NULL DEFAULT '2050-01-01'
 );
-
-select * from chat_group;

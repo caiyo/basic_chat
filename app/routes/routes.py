@@ -1,16 +1,9 @@
 from app import app
 from app.services import userservice, shared, chat_group_service
-from app.models.exception import UserExistsException
-from flask import request, make_response 
+from app.models.exception import UserExistsException, UserPermissionException
+from flask import request, make_response, abort
 from flask_jwt import JWT, jwt_required, current_identity
-import json
 
-@app.route('/test')
-def test():
-    sql = "SELECT * FROM test where col = 1"
-    result = shared.run_sql(sql, fetchone=True)
-    print result
-    return json.dumps(result)
 
 @app.route('/user', methods = ['POST'])
 def create_user():
@@ -31,12 +24,45 @@ def create_user():
     return "success"
 
 
+# TODO add validation that userid being passed is the user requesting it
+@app.route('/user/<userid>/chatgroups', methods=['GET'])
+def get_chat_groups(userid):
+    # if not userid == current_identity:
+    #     return abort(403)
+    chat_groups = userservice.get_user_chat_groups(userid)
+    return shared.to_json(chat_groups)
+
+# TODO add validation that userid has access to group   
+@app.route('/user/<userid>/message', methods=['POST'])
+def post_message(userid):
+    data = request.get_json()
+    group_id = data.get('groupid', None)
+    msg = data.get('message', None)
+
+    if not group_id or not msg:
+        return abort(400)
+
+    try:
+        userservice.post_message(userid, group_id, msg)
+        return "success"
+    except UserPermissionException as upe:
+        return make_response((str(upe), 403, None))
+
+# TODO add validation that userid has access to group
+@app.route('/chatgroup/<groupid>/messages', methods=['GET'])
+def get_messages(groupid):
+    messages = chat_group_service.get_group_messages(groupid)
+    return shared.to_json(messages)
+
+
 def identity(payload):
     return payload['identity']
 
-#/auth route
-#Requires json with username and password fields
+
+# /auth route
+# Requires json with username and password fields
 JWT(app, userservice.validate_user_login, identity)
+
 
 @app.route('/protected')
 @jwt_required()

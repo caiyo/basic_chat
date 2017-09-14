@@ -1,9 +1,11 @@
 import uuid
 from app.services import shared
 import user
+import chatMessage
+from baseModel import BaseModel
 
 
-class ChatGroup(object):
+class ChatGroup(BaseModel):
 
     def __init__(self, id=None, group_name=None, is_public=None, created_by=None):
         self.id = id if id else str(uuid.uuid4())
@@ -11,11 +13,10 @@ class ChatGroup(object):
         self.is_public = is_public
         self.created_by = created_by
 
-        # Lazy loaded via get_members()
+        # Lazy loaded attributes
         self.members = None
 
     def get_members(self):
-        from app.models.user import User
         if self.members:
             return self.members
         sql = """
@@ -32,6 +33,32 @@ class ChatGroup(object):
             self.members = members
 
         return members
+
+    def get_messages(self, on_or_after=None, limit=50, offset=0):
+        sql = """
+            SELECT  cm.message_id as msg_id,
+                    cm.message as msg,
+                    cm.created_by as user_guid,
+                    usr.username as username,
+                    cm.created_when as created_when
+            FROM chat_message cm
+            JOIN user usr on cm.created_by = usr.user_guid
+            WHERE group_id = %s
+            {0}
+            ORDER BY cm.created_when DESC
+            LIMIT {1} OFFSET {2}
+        """
+        and_clause = ''
+        params = (self.id,)
+        if on_or_after:
+            and_clause = "AND created_when >=%s"
+            params = (on_or_after)
+        sql = sql.format(and_clause, limit, offset)
+        results = shared.run_sql(sql, params)
+        msgs = None
+        if results:
+            msgs = [chatMessage.ChatMessage(r['msg'], self.id, r['user_guid'], r['username'], r['msg_id']) for r in results]
+        return msgs
 
     @classmethod
     def get(cls, group_id=None, group_name=None):

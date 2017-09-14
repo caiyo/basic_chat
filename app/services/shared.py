@@ -3,6 +3,7 @@ import hashlib
 import base64
 import pymysql.cursors
 import pymysql
+import json
 
 def create_salt():
     uuid_bytes = uuid.uuid4().bytes
@@ -43,3 +44,15 @@ def run_sql(sql, params=None, commit=False, fetchone = False):
         print "params: {0}".format(params)
     finally:
         connection.close()
+
+
+def to_json(data):
+    return json.dumps(data, cls=ComplexEncoder)
+
+
+class ComplexEncoder(json.JSONEncoder):
+    def default(self, obj):
+        if hasattr(obj,'reprJSON'):
+            return obj.reprJSON()
+        else:
+            return json.JSONEncoder.default(self, obj)

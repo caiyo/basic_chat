@@ -1,16 +1,18 @@
 import uuid
 from app.services import shared
 import group
+import chatMessage
+from baseModel import BaseModel
 
 
-class User(object):
+class User(BaseModel):
 
-    def __init__(self, username, user_id=None, password=None, pass_salt=None, display_name=None):
+    def __init__(self, username=None, user_id=None, password=None, pass_salt=None, display_name=None):
         
         self.username = username
-        self.password = password
+        self._password = password
         self.display_name = display_name
-        self.pass_salt = pass_salt
+        self._pass_salt = pass_salt
         self.id = user_id if user_id else str(uuid.uuid4())
 
         # Lazy loaded via get_groups()
@@ -21,7 +23,7 @@ class User(object):
             INSERT INTO USER (user_guid, username, password, pass_salt, created_when, updated_when, deleted_when) 
             VALUES (%s, %s, %s, %s, NOW(), NOW(), '2050-01-01')
             """
-        shared.run_sql(sql, (self.id, self.username, self.password, self.pass_salt), commit=True)
+        shared.run_sql(sql, (self.id, self.username, self._password, self._pass_salt), commit=True)
 
     def get_groups(self):
         if self.groups:
@@ -61,9 +63,17 @@ class User(object):
         
         """
 
-    def public_data(self):
-        return User(self.username, self.id)
-    
+    def validate_password(self, in_pass):
+        hashed_inpass = shared.hash_string('{0}{1}'.format(in_pass, self._pass_salt))
+
+        if hashed_inpass == self._password:
+            return True
+        return False
+
+    def post_message(self, group_id, msg):
+        msg = chatMessage.ChatMessage(msg, group_id, self.id)
+        msg.post()
+
     @classmethod
     def get(cls, username=None, user_id=None):
         if not username and not user_id:
@@ -76,6 +86,6 @@ class User(object):
         if user:
             user_obj = User(user['user_guid'], user['username'], user['password'],
                             user['pass_salt'], user['displayname'])
-        
+
         return user_obj
 
