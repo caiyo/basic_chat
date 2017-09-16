@@ -9,20 +9,16 @@
     function appCntrl($scope, $location, userservice){
         var vm = this
         vm.text = "HELLO WORLD!";
-        vm.getCurrentUser = getCurrentUser;
-        vm.getText = getText;
-        vm.currentUser = null
+        vm.logout = logout;
 
-        getCurrentUser();
+        vm.currentUser = userservice.getCurrentUser();
 
-        function getText(){
-            return true;
-        };
-        function getCurrentUser (){
-            return userservice.getCurrentUser().then(function(data){
-                vm.currentUser = data;
-            });
+        userservice.setCurrentUser();
+
+        function logout(){
+            userservice.logout()
         }
+
         $scope.$on('$routeChangeSuccess', updateNavBarHighlight);
 
         function updateNavBarHighlight ($event){

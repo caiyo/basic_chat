@@ -3,8 +3,8 @@
     angular.module('main')
     .controller('SignupCntrl', signupCntrl);
 
-    signupCntrl.$inject = ['dataservice', '$location'];
-    function signupCntrl(dataservice, $location){
+    signupCntrl.$inject = ['userservice', '$location'];
+    function signupCntrl(userservice, $location){
         var vm = this;
         vm.errors = [];
         vm.submitSignup = submitSignup;
@@ -18,7 +18,7 @@
                 vm.errors.push("Password and confirm password don't match");
                 return;
             }
-            dataservice.signup(vm.username, vm.password, vm.confirmPassword)
+            userservice.signup(vm.username, vm.password, vm.confirmPassword)
                 .then(successSignup, failSignup);
         }
 

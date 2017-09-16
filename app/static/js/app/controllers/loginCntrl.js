@@ -2,9 +2,9 @@
     angular.module('main')
     .controller('LoginCntrl', loginCntrl);
 
-    loginCntrl.$inject = ['dataservice', '$window', '$location'];
+    loginCntrl.$inject = ['userservice', '$window', '$location'];
 
-    function loginCntrl(dataservice, $window, $location){
+    function loginCntrl(userservice, $window, $location){
         var vm = this;
         vm.submitLogin = submitLogin;
         vm.errors = [];
@@ -12,7 +12,7 @@
         function submitLogin(event){
             vm.errors = [];
             event.preventDefault();
-            dataservice.login(vm.username, vm.password)
+            userservice.login(vm.username, vm.password)
                 .then(successLogin)
                  .catch(failLogin);
         }

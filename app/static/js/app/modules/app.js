@@ -11,20 +11,32 @@
             .when('/', {
                 templateUrl: '../../static/html/index.html',
                 controller: 'ChatCntrl',
-                controllerAs: 'chat'
+                controllerAs: 'chat',
             })
             .when('/login', {
                 templateUrl: '../../static/html/login.html',
                 controller: 'LoginCntrl',
-                controllerAs: 'login'
+                controllerAs: 'login',
+                resolve : {
+                    checkLoginStatus : checkLoginStatus
+                }
             })
             .when('/signup', {
                 templateUrl: '../../static/html/signup.html',
                 controller: 'SignupCntrl',
-                controllerAs: 'signup'
+                controllerAs: 'signup',
+                resolve : {
+                    checkLoginStatus : checkLoginStatus
+                }
             });
 
 
 
-    })
+    });
+
+    function checkLoginStatus(userservice, $location){
+        if (userservice.getCurrentUser().user){
+            $location.path('/');
+        }
+    }
 })();

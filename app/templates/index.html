@@ -42,24 +42,21 @@
 
               <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav mr-auto">
-                  <li class="nav-item">
-                    <a class="nav-link" href="#" ng-class="{'active' : app.currentTab == '/'}">Home</a>
-                  </li>
                 </ul>
-                <ul class="navbar-nav" ng-if="!app.currentUser">
+                <ul class="navbar-nav" ng-if="!app.currentUser.user">
                   <li class="nav-item">
                     <a class="nav-link" href="#/login" ng-class="{'active' : app.currentTab == '/login'}">Login</a>
                   </li>
                   <li class="nav-item">
-                    <a class="nav-link" href="#/signup" ng-class="{'active' : app.currentTab == '/signup'}">Register</a>
+                    <a class="nav-link" href="#/signup" ng-class="{'active' : app.currentTab == '/signup'}">Sign Up</a>
                   </li>
                 </ul>
-                <ul class="navbar-nav" ng-if="app.currentUser">
+                <ul class="navbar-nav" ng-if="app.currentUser.user">
                   <li class="nav-item">
-                    <span class="nav-link" ng-bind="app.currentUser.username"></span>
+                    <span class="nav-link" ng-bind="app.currentUser.user.username"></span>
                   </li>
                   <li class="nav-item">
-                    <a class="nav-link">Logout</a>
+                    <a class="nav-link" ng-click="app.logout()">Logout</a>
                   </li>
                 </ul>
               </div>

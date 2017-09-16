@@ -14,9 +14,10 @@
         return interceptor;
 
         function requestInterceptor(config){
+
             config.headers = config.headers || {};
             if ($window.localStorage.token){
-                config.headers.Authorization = 'JWT ' + $window.sessionStorage.token;
+                config.headers.Authorization = 'JWT ' + $window.localStorage.token;
             }
 
             return config;

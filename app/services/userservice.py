@@ -60,6 +60,5 @@ def validate_user_login(username, password):
         return None
 
     if user.validate_password(password):
-        print user
         return user
     return None
