@@ -1,15 +1,22 @@
 from app.services import shared
 from app.models.user import User
-from app.models.exception import UserExistsException, UserPermissionException
+from app.models.exception import UserExistsException, UserPermissionException, UserNotCreatedException
 
 
 def create_user(username, password, confirm_password):
     existing_user = User.get(username)
+
+    if not username:
+        raise UserNotCreatedException("No username provided")
+
     if existing_user:
-        raise UserExistsException("username already exists")
+        raise UserExistsException("Username already exists")
 
     if password != confirm_password:
-        return None
+        raise UserNotCreatedException("Password and confirm password don't match")
+
+    if not password or not confirm_password:
+        raise UserNotCreatedException("Password cannot be blank")
 
     new_salt = shared.create_salt()
     hashed_pass = shared.hash_string(password+new_salt)
@@ -18,8 +25,8 @@ def create_user(username, password, confirm_password):
     return new_user
 
 
-def get_user(username):
-    user = User.get(username)
+def get_user(username=None, user_id=None):
+    user = User.get(username=username, user_id=user_id)
     return user
 
 
@@ -48,11 +55,11 @@ def post_message(user_id, group_id, msg):
 
 
 def validate_user_login(username, password):
-    user = User.get(username)
-    
+    user = User.get(username=username)
     if not user:
         return None
 
     if user.validate_password(password):
+        print user
         return user
     return None

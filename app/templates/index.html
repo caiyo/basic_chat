@@ -1,0 +1,70 @@
+<html >
+    <head>
+        <!--CSS Libraries-->
+        <link rel="stylesheet" href="../static/js/bower_components/bootstrap/dist/css/bootstrap.css">
+
+
+        <!--CSS app-->
+        <link rel="stylesheet" href="../static/css/main.css">
+
+        <link rel="stylesheet" href="../static/js/app/directives/form.errors/form.errors.css">
+
+        <!--JS libraries-->
+        <script src="../static/js/bower_components/angular/angular.min.js"></script>
+        <script src="../static/js/bower_components/angular-route/angular-route.min.js"></script>
+        <script src="../static/js/bower_components/jquery/dist/jquery.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>
+        <script src="../static/js/bower_components/bootstrap/dist/js/bootstrap.js"></script>
+
+        <!--JS app-->
+        <script src="../static/js/app/modules/app.js"></script>
+        <script src="../static/js/app/controllers/appCntrl.js"></script>
+        <script src="../static/js/app/controllers/chatCntrl.js"></script>
+        <script src="../static/js/app/controllers/signupCntrl.js"></script>
+        <script src="../static/js/app/controllers/loginCntrl.js"></script>
+
+        <script src="../static/js/app/directives/form.errors/form.errors.js"></script>
+
+        <script src="../static/js/app/services/dataService.js"></script>
+        <script src="../static/js/app/services/httpInterceptor.js"></script>
+        <script src="../static/js/app/services/userservice.js"></script>
+
+
+    </head>
+    <body ng-app="main">
+
+        <div ng-controller="AppController as app">
+            <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+              <a class="navbar-brand" href="#">Chats R Us</a>
+              <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+              </button>
+
+              <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav mr-auto">
+                  <li class="nav-item">
+                    <a class="nav-link" href="#" ng-class="{'active' : app.currentTab == '/'}">Home</a>
+                  </li>
+                </ul>
+                <ul class="navbar-nav" ng-if="!app.currentUser">
+                  <li class="nav-item">
+                    <a class="nav-link" href="#/login" ng-class="{'active' : app.currentTab == '/login'}">Login</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="#/signup" ng-class="{'active' : app.currentTab == '/signup'}">Register</a>
+                  </li>
+                </ul>
+                <ul class="navbar-nav" ng-if="app.currentUser">
+                  <li class="nav-item">
+                    <span class="nav-link" ng-bind="app.currentUser.username"></span>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link">Logout</a>
+                  </li>
+                </ul>
+              </div>
+            </nav>
+            <div id="main-content" class="container" ng-view></div>
+        </div>
+    </body>
+</html>

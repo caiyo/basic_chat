@@ -103,3 +103,5 @@ ENV/
 .DS_Store
 
 .idea/
+
+app/static/js/bower_components

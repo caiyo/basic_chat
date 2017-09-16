@@ -3,3 +3,6 @@ class UserExistsException(Exception):
 
 class UserPermissionException(Exception):
     pass
+
+class UserNotCreatedException(Exception):
+    pass

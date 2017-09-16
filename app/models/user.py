@@ -84,7 +84,7 @@ class User(BaseModel):
         user = shared.run_sql(sql, (username or user_id,), fetchone=True)
         user_obj = None
         if user:
-            user_obj = User(user['user_guid'], user['username'], user['password'],
+            user_obj = User(user['username'], user['user_guid'], user['password'],
                             user['pass_salt'], user['displayname'])
 
         return user_obj
