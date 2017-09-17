@@ -5,12 +5,13 @@ from baseModel import BaseModel
 
 class ChatMessage(BaseModel):
 
-    def __init__(self, msg, group_id, created_by, username=None, msg_id=None):
+    def __init__(self, msg, group_id, created_by, username=None, msg_id=None, created_when=None):
         self.msg_id = msg_id if msg_id else str(uuid.uuid4())
         self.group_id = group_id
         self.message = msg
         self.username = username
         self.created_by = created_by
+        self.created_when = created_when
 
     def post(self):
         sql = """

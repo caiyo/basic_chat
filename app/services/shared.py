@@ -4,6 +4,8 @@ import base64
 import pymysql.cursors
 import pymysql
 import json
+from datetime import date, datetime
+
 
 def create_salt():
     uuid_bytes = uuid.uuid4().bytes
@@ -52,6 +54,8 @@ def to_json(data):
 
 class ComplexEncoder(json.JSONEncoder):
     def default(self, obj):
+        if isinstance(obj, (datetime, date)):
+            return obj.isoformat()
         if hasattr(obj,'reprJSON'):
             return obj.reprJSON()
         else:

@@ -73,6 +73,32 @@ class User(BaseModel):
     def post_message(self, group_id, msg):
         msg = chatMessage.ChatMessage(msg, group_id, self.id)
         msg.post()
+        return msg
+
+    def get_last_viewed(self, groupid):
+        sql= """
+            SELECT last_viewed 
+            FROM chat_group_members cgm
+            WHERE group_id = %s
+            AND user_id = %s 
+        """
+        result = shared.run_sql(sql, (groupid, self.id), fetchone=True)
+        last_viewed = None
+        if result:
+            last_viewed = result['last_viewed']
+
+        return last_viewed
+
+    def update_last_viewed(self, groupid):
+        sql = """
+            UPDATE chat_group_members
+            SET last_viewed = NOW()
+            WHERE group_id = %s
+            AND user_id = %s
+        """
+
+        shared.run_sql(sql, (groupid, self.id), commit=True)
+        return
 
     @classmethod
     def get(cls, username=None, user_id=None):

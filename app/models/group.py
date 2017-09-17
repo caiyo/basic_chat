@@ -35,6 +35,7 @@ class ChatGroup(BaseModel):
         return members
 
     def get_messages(self, on_or_after=None, limit=50, offset=0):
+        params = []
         sql = """
             SELECT  cm.message_id as msg_id,
                     cm.message as msg,
@@ -46,18 +47,27 @@ class ChatGroup(BaseModel):
             WHERE group_id = %s
             {0}
             ORDER BY cm.created_when DESC
-            LIMIT {1} OFFSET {2}
+            {1} {2}
         """
         and_clause = ''
-        params = (self.id,)
+        limit_clause = ''
+        offset_clause = ''
+        params.append(self.id)
         if on_or_after:
             and_clause = "AND created_when >=%s"
-            params = (on_or_after)
-        sql = sql.format(and_clause, limit, offset)
-        results = shared.run_sql(sql, params)
+            params.append(on_or_after)
+        if limit is not None:
+            limit_clause = "LIMIT %s"
+            params.append(limit)
+        if offset is not None:
+            offset_clause = "OFFSET %s"
+            params.append(offset)
+        sql = sql.format(and_clause, limit_clause, offset_clause)
+        results = shared.run_sql(sql, tuple(params))
         msgs = None
         if results:
-            msgs = [chatMessage.ChatMessage(r['msg'], self.id, r['user_guid'], r['username'], r['msg_id']) for r in results]
+            msgs = [chatMessage.ChatMessage(r['msg'], self.id, r['user_guid'], r['username'], r['msg_id'], r['created_when']) for r in results]
+            msgs.sort(key=lambda k: k.created_when)
         return msgs
 
     @classmethod

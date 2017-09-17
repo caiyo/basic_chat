@@ -1,10 +1,10 @@
 import json
-
+from app.services import shared
 
 class BaseModel(object):
 
     def __repr__(self):
-        return json.dumps(self.__dict__)
+        return shared.to_json(self.__dict__)
 
     # ignores keys starting with _ denoting it as a private variable
     def reprJSON(self):

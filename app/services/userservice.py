@@ -1,4 +1,4 @@
-from app.services import shared
+import shared, chat_group_service
 from app.models.user import User
 from app.models.exception import UserExistsException, UserPermissionException, UserNotCreatedException
 
@@ -30,6 +30,18 @@ def get_user(username=None, user_id=None):
     return user
 
 
+def get_current_user_data(userid):
+    current_user = get_user(user_id=userid)
+    if not current_user:
+        return None
+    current_user.get_groups()
+    for group in current_user.groups:
+        group.get_members()
+        if group.group_name == 'General':
+            group.messages = get_group_messages(group.id, userid)
+    return current_user
+
+
 def get_user_chat_groups(userid):
     user = User(user_id=userid)
     chat_groups = user.get_groups()
@@ -51,7 +63,7 @@ def post_message(user_id, group_id, msg):
     if not permitted_to_post:
         raise UserPermissionException('Not permitted to post to {0}'.format(group_id))
 
-    user.post_message(group_id, msg)
+    return user.post_message(group_id, msg)
 
 
 def validate_user_login(username, password):
@@ -62,3 +74,14 @@ def validate_user_login(username, password):
     if user.validate_password(password):
         return user
     return None
+
+
+def get_group_messages(groupid, userid, latest_messages=False):
+    user = User(user_id=userid)
+    last_viewed = None
+    if latest_messages:
+        last_viewed = user.get_last_viewed(groupid)
+    user.update_last_viewed(groupid)
+    messages = chat_group_service.get_group_messages(groupid, on_or_after=last_viewed)
+    return messages
+

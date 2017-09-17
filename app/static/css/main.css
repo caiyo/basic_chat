@@ -1,3 +1,9 @@
+#main-content {
+    padding-top: 56px;
+    box-sizing: border-box;
+    height: 100%;
+}
+
 .form-signin {
   max-width: 330px;
   padding: 15px;
@@ -36,3 +42,38 @@
   margin-top: 10px;
 }
 
+#chat-page{
+    height: 100%;
+}
+
+#chat-page .left-rail{
+    background-color: #e0e0e0;
+}
+#chat-page .left-rail .user-list{
+    margin: 10px 10px;
+    border: 1px solid black;
+}
+
+#chat-page #chat-window{
+    background-color: #a0a0a0;
+}
+
+#chat-page #chat-window #msg-input{
+    border: 1px solid black;
+    width: 90%;
+    position: absolute;
+    bottom: 10px;
+    background-color: white;
+}
+#chat-page #chat-window #msg-input form{
+    margin-bottom: 0px;
+}
+#chat-page #chat-window #msg-input #msg-text{
+    width: 90%;
+    background-color: transparent;
+}
+
+#chat-page #chat-window #msg-container{
+    height: calc(100% - 70px);
+    overflow: auto;
+}

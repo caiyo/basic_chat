@@ -13,6 +13,7 @@
         <script src="../static/js/bower_components/angular/angular.min.js"></script>
         <script src="../static/js/bower_components/angular-route/angular-route.min.js"></script>
         <script src="../static/js/bower_components/jquery/dist/jquery.js"></script>
+        <script src="../static/js/bower_components/moment/moment.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>
         <script src="../static/js/bower_components/bootstrap/dist/js/bootstrap.js"></script>
 
@@ -34,7 +35,7 @@
     <body ng-app="main">
 
         <div ng-controller="AppController as app">
-            <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <nav class="navbar fixed-top navbar-expand-lg navbar-dark bg-dark">
               <a class="navbar-brand" href="#">Chats R Us</a>
               <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -61,7 +62,7 @@
                 </ul>
               </div>
             </nav>
-            <div id="main-content" class="container" ng-view></div>
+            <div id="main-content" class="" ng-view></div>
         </div>
     </body>
 </html>

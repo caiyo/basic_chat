@@ -9,7 +9,8 @@
         return {
             login: login,
             signup: signup,
-            getLoggedInUser: getLoggedInUser
+            getLoggedInUser: getLoggedInUser,
+            postMessage: postMessage,
         };
 
         function login(username, password) {
@@ -45,6 +46,19 @@
             }
 
             function getUserFail(response){
+                return $q.reject(response);
+            }
+        }
+
+        function postMessage(userid, groupid, msg){
+            var parameters = JSON.stringify({'groupid': groupid, 'message' : msg});
+            return $http.post('/api/user/'+userid+'/message', parameters).then(postMessageSuccess, postMessageFail);
+
+            function postMessageSuccess(response){
+                return response.data;
+            }
+
+            function postMessageFail(response){
                 return $q.reject(response);
             }
         }

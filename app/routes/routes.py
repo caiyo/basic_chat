@@ -13,7 +13,7 @@ def index():
 @jwt_required()
 def get_user():
     userid = current_identity
-    current_user =userservice.get_user(user_id=userid)
+    current_user = userservice.get_current_user_data(userid)
     return shared.to_json(current_user)
 
 @app.route('/api/user', methods = ['POST'])
@@ -41,11 +41,13 @@ def create_user():
 
 # TODO add validation that userid being passed is the user requesting it
 @app.route('/api/user/<userid>/chatgroups', methods=['GET'])
+@jwt_required()
 def get_chat_groups(userid):
-    # if not userid == current_identity:
-    #     return abort(403)
+    if not userid == current_identity:
+        return abort(403)
     chat_groups = userservice.get_user_chat_groups(userid)
     return shared.to_json(chat_groups)
+
 
 # TODO add validation that userid has access to group
 @app.route('/api/user/<userid>/message', methods=['POST'])
@@ -55,18 +57,30 @@ def post_message(userid):
     msg = data.get('message', None)
 
     if not group_id or not msg:
-        return abort(400)
+        return make_response(("Error posting message", 400, None))
 
     try:
-        userservice.post_message(userid, group_id, msg)
-        return "success"
+        msg = userservice.post_message(userid, group_id, msg)
+        return shared.to_json(msg)
     except UserPermissionException as upe:
         return make_response((str(upe), 403, None))
 
+
 # TODO add validation that userid has access to group
 @app.route('/api/chatgroup/<groupid>/messages', methods=['GET'])
+@jwt_required()
 def get_messages(groupid):
-    messages = chat_group_service.get_group_messages(groupid)
+    user_id = current_identity
+    messages = userservice.get_group_messages(groupid, user_id)
+    return shared.to_json(messages)
+
+
+# TODO add validation that userid has access to group
+@app.route('/api/chatgroup/<groupid>/messages/latest', methods=['GET'])
+@jwt_required()
+def get_messages_latest(groupid):
+    user_id = current_identity
+    messages = userservice.get_group_messages(groupid, user_id, latest_messages=True)
     return shared.to_json(messages)
 
 
