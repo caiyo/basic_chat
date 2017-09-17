@@ -1,6 +1,6 @@
 (function(){
     'use strict'
-    angular.module('main', ['ngRoute'])
+    angular.module('main', ['ngRoute', 'btford.socket-io'])
     .config(['$interpolateProvider', function($interpolateProvider) {
       $interpolateProvider.startSymbol('{[');
       $interpolateProvider.endSymbol(']}');

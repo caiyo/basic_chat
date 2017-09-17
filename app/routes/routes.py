@@ -1,7 +1,7 @@
 from app import app
 from app.services import userservice, shared, chat_group_service
-from app.models.exception import UserExistsException, UserPermissionException, UserNotCreatedException
-from flask import request, make_response, abort, render_template
+from app.models.exception import UserExistsException, UserNotCreatedException
+from flask import request, make_response, abort, render_template, session
 from flask_jwt import JWT, jwt_required, current_identity
 
 @app.route('/')
@@ -9,11 +9,20 @@ def index():
     return render_template('index.html')
 
 
+@app.route('/logout', methods=['POST'])
+def logout():
+    session.clear()
+    return ''
+
+
 @app.route('/api/user', methods = ['GET'])
 @jwt_required()
 def get_user():
     userid = current_identity
     current_user = userservice.get_current_user_data(userid)
+
+    # jwt is set for sockets to authenticate
+    session['jwt'] = request.headers.get('Authorization').split('JWT ')[1]
     return shared.to_json(current_user)
 
 @app.route('/api/user', methods = ['POST'])
@@ -48,22 +57,12 @@ def get_chat_groups(userid):
     chat_groups = userservice.get_user_chat_groups(userid)
     return shared.to_json(chat_groups)
 
-
-# TODO add validation that userid has access to group
-@app.route('/api/user/<userid>/message', methods=['POST'])
-def post_message(userid):
-    data = request.get_json()
-    group_id = data.get('groupid', None)
-    msg = data.get('message', None)
-
-    if not group_id or not msg:
-        return make_response(("Error posting message", 400, None))
-
-    try:
-        msg = userservice.post_message(userid, group_id, msg)
-        return shared.to_json(msg)
-    except UserPermissionException as upe:
-        return make_response((str(upe), 403, None))
+@app.route('/api/chatgroup/<groupid>/messages/viewed', methods=['POST'])
+@jwt_required()
+def viewed_messages(groupid):
+    user_id = current_identity
+    userservice.update_last_viewed(user_id, groupid)
+    return ''
 
 
 # TODO add validation that userid has access to group
@@ -73,6 +72,7 @@ def get_messages(groupid):
     user_id = current_identity
     messages = userservice.get_group_messages(groupid, user_id)
     return shared.to_json(messages)
+
 
 
 # TODO add validation that userid has access to group
@@ -91,6 +91,7 @@ def identity(payload):
 # /auth route
 # Requires json with username and password fields
 JWT(app, userservice.validate_user_login, identity)
+
 
 
 @app.route('/api/protected')

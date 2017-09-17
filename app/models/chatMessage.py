@@ -19,4 +19,21 @@ class ChatMessage(BaseModel):
             VALUES (%s, %s, %s,%s, NOW(), NOW())
         """
         shared.run_sql(sql, (self.msg_id, self.group_id, self.created_by, self.message), commit=True)
+        return self.get(self.msg_id)
+
+    @classmethod
+    def get(cls, msg_id):
+        sql = """
+            SELECT cm.*, u.username 
+            FROM chat_message cm 
+            JOIN user u on cm.created_by = u.user_guid
+            WHERE message_id = %s
+        """
+
+        result = shared.run_sql(sql, (msg_id,), fetchone=True)
+        if result:
+            msg = ChatMessage(result['message'], result['group_id'], result['created_by'], username=result['username'],
+                              msg_id=result['message_id'], created_when=result['created_when'])
+            return msg
+        return None
 

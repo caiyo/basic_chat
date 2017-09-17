@@ -1,16 +1,20 @@
 (function(){
+    'use strict';
     angular
         .module('main')
         .factory('dataservice', dataservice);
 
-    dataservice.$inject = ['$http', '$window', '$q'];
+    dataservice.$inject = ['$http', '$window', '$q', 'socketservice'];
 
-    function dataservice($http, $window, $q) {
+    function dataservice($http, $window, $q, socketservice) {
         return {
             login: login,
+            logout: logout,
             signup: signup,
             getLoggedInUser: getLoggedInUser,
             postMessage: postMessage,
+            updateGroupViewed : updateGroupViewed,
+            getLatestMessages : getLatestMessages
         };
 
         function login(username, password) {
@@ -22,6 +26,10 @@
                 return response.data;
             }
 
+        }
+
+        function logout(){
+            return $http.post('/logout')
         }
 
         function signup(username, password, confirmPassword){
@@ -51,16 +59,20 @@
         }
 
         function postMessage(userid, groupid, msg){
-            var parameters = JSON.stringify({'groupid': groupid, 'message' : msg});
-            return $http.post('/api/user/'+userid+'/message', parameters).then(postMessageSuccess, postMessageFail);
+            var parameters = {'groupid': groupid, 'message' : msg};
+            socketservice.emit('post_message', parameters)
+        }
 
-            function postMessageSuccess(response){
-                return response.data;
-            }
+        function updateGroupViewed(groupid){
+            return $http.post('/api/chatgroup/'+groupid+'/messages/viewed');
 
-            function postMessageFail(response){
-                return $q.reject(response);
-            }
+        }
+
+        function getLatestMessages(groupid){
+            return $http.get('/api/chatgroup/'+groupid+'/messages/latest')
+                       .then(function(result){
+                            return result.data;
+                       });
         }
     }
 })();

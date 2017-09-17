@@ -3,16 +3,16 @@ from app.services import shared
 import user
 import chatMessage
 from baseModel import BaseModel
-
+from datetime import date, datetime
 
 class ChatGroup(BaseModel):
 
-    def __init__(self, id=None, group_name=None, is_public=None, created_by=None):
+    def __init__(self, id=None, group_name=None, is_public=None, created_by=None, last_viewed=None):
         self.id = id if id else str(uuid.uuid4())
         self.group_name = group_name
         self.is_public = is_public
         self.created_by = created_by
-
+        self.last_viewed = last_viewed
         # Lazy loaded attributes
         self.members = None
 
@@ -54,14 +54,19 @@ class ChatGroup(BaseModel):
         offset_clause = ''
         params.append(self.id)
         if on_or_after:
-            and_clause = "AND created_when >=%s"
+            if isinstance(on_or_after, (datetime, date)):
+                pass
+                # on_or_after = on_or_after.isoformat()
+            and_clause = "AND cm.created_when >=%s"
             params.append(on_or_after)
         if limit is not None:
             limit_clause = "LIMIT %s"
             params.append(limit)
-        if offset is not None:
-            offset_clause = "OFFSET %s"
-            params.append(offset)
+
+            if offset is not None:
+                offset_clause = "OFFSET %s"
+                params.append(offset)
+
         sql = sql.format(and_clause, limit_clause, offset_clause)
         results = shared.run_sql(sql, tuple(params))
         msgs = None

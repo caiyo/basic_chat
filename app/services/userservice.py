@@ -42,12 +42,13 @@ def get_current_user_data(userid):
     return current_user
 
 
-def get_user_chat_groups(userid):
+def get_user_chat_groups(userid, include_members=True):
     user = User(user_id=userid)
     chat_groups = user.get_groups()
 
-    for chat_group in chat_groups:
-        chat_group.get_members()
+    if include_members:
+        for chat_group in chat_groups:
+            chat_group.get_members()
 
     return chat_groups
 
@@ -81,7 +82,12 @@ def get_group_messages(groupid, userid, latest_messages=False):
     last_viewed = None
     if latest_messages:
         last_viewed = user.get_last_viewed(groupid)
-    user.update_last_viewed(groupid)
+    update_last_viewed(userid, groupid)
     messages = chat_group_service.get_group_messages(groupid, on_or_after=last_viewed)
     return messages
+
+
+def update_last_viewed(userid, groupid):
+    user = User(user_id=userid)
+    user.update_last_viewed(groupid)
 

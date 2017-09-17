@@ -1,3 +1,4 @@
 flask
 PyMySQL
 Flask-JWT
+flask-socketio

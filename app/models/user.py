@@ -33,7 +33,8 @@ class User(BaseModel):
             SELECT cg.group_id as group_id,
                    cg.group_name as group_name,
                    cg.is_public as is_public,
-                   cg.created_by as created_by
+                   cg.created_by as created_by,
+                   cgm.last_viewed as last_viewed
             FROM chat_group_members cgm
             JOIN chat_group cg on cg.group_id = cgm.group_id 
             WHERE cgm.user_id = %s
@@ -44,7 +45,7 @@ class User(BaseModel):
 
         if results:
             groups = [group.ChatGroup(id=row['group_id'], group_name=row['group_name'],
-                                is_public=row['is_public'], created_by=row['created_by'])
+                                is_public=row['is_public'], created_by=row['created_by'], last_viewed=row['last_viewed'])
                       for row in results]
             self.groups = groups
 
@@ -72,7 +73,7 @@ class User(BaseModel):
 
     def post_message(self, group_id, msg):
         msg = chatMessage.ChatMessage(msg, group_id, self.id)
-        msg.post()
+        msg = msg.post()
         return msg
 
     def get_last_viewed(self, groupid):
