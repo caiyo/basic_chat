@@ -126,7 +126,7 @@
 
         function getLatestMessages(groupid){
             dataservice.getLatestMessages(groupid).then(function(msgs){
-                Array.prototype.push.apply(currentUser.user.activeGroup.messages, 1msgs);
+                Array.prototype.push.apply(currentUser.user.activeGroup.messages, msgs);
             });
         }
 
