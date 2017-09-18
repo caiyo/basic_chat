@@ -18,6 +18,15 @@
 
     </div>
     <div id="chat-window" class="col-md-10">
+        <div id="new-message-alert" class="alert alert-info" role="alert" ng-show="chat.newUnreadMessages && !chat.loadingMessages">
+            You have new messages below! {[chat.newUnreadMessages]}<a ng-click="chat.scrollToBottom()"> Click here to view</a>
+        </div>
+        <div id="loading-message-alert" class="alert alert-info" role="alert" ng-show="chat.loadingMessages">
+            Loading previous messages
+            <div class="loader-div">
+                <div class="loader"></div>
+            </div>
+        </div>
         <div id="msg-container">
             <div class="msg-item" ng-repeat="msg in chat.currentUser.user.activeGroup.messages">
                 <chat-message message="msg"></chat-message>

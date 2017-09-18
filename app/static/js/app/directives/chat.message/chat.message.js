@@ -18,7 +18,6 @@
         return directive;
 
         function link(scope, element, attrs, vm){
-            console.log(vm.message);
         }
 
     }
@@ -30,7 +29,7 @@
         vm.getTimeStamp=getTimeStamp;
 
         function getTimeStamp(timeString){
-            return moment(timeString).format('HH:MM MM/DD')
+            return moment(timeString).format('HH:mm MM/DD')
         }
     }
 })();

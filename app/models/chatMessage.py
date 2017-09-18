@@ -16,7 +16,7 @@ class ChatMessage(BaseModel):
     def post(self):
         sql = """
             INSERT INTO chat_message (message_id, group_id, created_by, message, created_when, updated_when)
-            VALUES (%s, %s, %s,%s, NOW(), NOW())
+            VALUES (%s, %s, %s,%s, NOW(4), NOW())
         """
         shared.run_sql(sql, (self.msg_id, self.group_id, self.created_by, self.message), commit=True)
         return self.get(self.msg_id)

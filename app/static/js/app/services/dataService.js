@@ -14,7 +14,8 @@
             getLoggedInUser: getLoggedInUser,
             postMessage: postMessage,
             updateGroupViewed : updateGroupViewed,
-            getLatestMessages : getLatestMessages
+            getLatestMessages : getLatestMessages,
+            getMessages : getMessages
         };
 
         function login(username, password) {
@@ -72,6 +73,14 @@
 
         function getLatestMessages(groupid){
             return $http.get('/api/chatgroup/'+groupid+'/messages/latest')
+                       .then(function(result){
+                            return result.data;
+                       });
+        }
+
+        function getMessages(groupid, beforeMessageId){
+            var params = beforeMessageId ? {beforemsgid : beforeMessageId} : null;
+            return $http.get('/api/chatgroup/'+groupid+'/messages', {'params': params})
                        .then(function(result){
                             return result.data;
                        });

@@ -1,7 +1,6 @@
 .chat-message{
-    padding-top: 5px;
-    padding-left: 15px;
-    padding-bottom: 5px;
+    padding: 5px 15px;
+    word-wrap: break-word;
 }
 .chat-message:hover{
     background-color: #434857;

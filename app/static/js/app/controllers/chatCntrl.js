@@ -3,12 +3,15 @@
     angular.module('main')
     .controller('ChatCntrl', chatCntrl);
 
-    chatCntrl.$inject = ['userservice', 'socketservice', '$scope'];
+    chatCntrl.$inject = ['userservice', 'socketservice', '$scope', '$timeout'];
 
-    function chatCntrl(userservice, socketservice, $scope){
+    function chatCntrl(userservice, socketservice, $scope, $timeout){
         var vm = this;
         vm.postMsg = postMsg;
         vm.currentUser = userservice.getCurrentUser();
+        vm.newUnreadMessages = false;
+        vm.scrollToBottom = scrollToBottom;
+        vm.loadingMessages = false;
 
         socketservice.forward('new_message', $scope);
         socketservice.forward('socket_connected', $scope);
@@ -17,6 +20,8 @@
         $scope.$on('socket:new_message', socketNewMessageCallback);
         $scope.$on('socket:socket_connected', socketConnectCallback);
         $scope.$on('socket:new_group_member', socketNewGroupMemberCallback)
+
+        var msgContainer = $('#msg-container');
 
         function postMsg (e){
             e.preventDefault();
@@ -39,6 +44,12 @@
             if(vm.currentUser.user.activeGroup.id === data.group_id){
                 vm.currentUser.user.activeGroup.messages.push(data);
                 userservice.updateGroupViewed(data.group_id);
+                if (onLastMessage()){
+                    scrollToBottom();
+                }
+                else{
+                    vm.newUnreadMessages = true;
+                }
             }
         }
 
@@ -54,8 +65,50 @@
         }
 
         function scrollToBottom(){
-            $("#msg-container").animate({ scrollTop: $('#msg-container').prop("scrollHeight")}, 500);
+            msgContainer.animate({ scrollTop: msgContainer.prop("scrollHeight")}, 500);
+            vm.newUnreadMessages = false;
         }
 
+        function onLastMessage(){
+            var lastMsg = $('.chat-message').last();
+            if(msgContainer.scrollTop() + msgContainer.height() > msgContainer.prop('scrollHeight') - lastMsg.height()+10) {
+                return true;
+            }
+            return false;
+        }
+
+        function loadOldMessages(firstMessage){
+            vm.loadingMessages = true
+            $timeout(function(){
+                userservice.getOldMessages(vm.currentUser.user.activeGroup.id, firstMessage.msg_id, keepPosition());
+            });
+
+            function keepPosition(){
+                var currentScrollTop = msgContainer.scrollTop();
+                var currentScrollHeight =  msgContainer.prop('scrollHeight');
+                var previousLocation = currentScrollHeight - currentScrollTop;
+
+                return function(){
+                    msgContainer.scrollTop(msgContainer.prop('scrollHeight') - previousLocation);
+                    vm.loadingMessages = false;
+                }
+            }
+        }
+
+        $("#msg-container").scroll(function () {
+            if(onLastMessage()){
+                vm.newUnreadMessages = false;
+                $scope.$apply();
+            }
+            if(vm.currentUser.user && $('#msg-container').scrollTop() === 0){
+                var firstMessage = vm.currentUser.user.activeGroup.messages[0];
+                if (firstMessage){
+                    loadOldMessages(firstMessage);
+                }
+                console.log("at top");
+
+
+            }
+        });
     }
 })();

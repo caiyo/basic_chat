@@ -42,7 +42,7 @@ CREATE TABLE chat_message(
     group_id varchar(36) NOT NULL,
     created_by varchar(36) NOT NULL,
     message text,
-    created_when datetime NOT NULL,
+    created_when datetime(3) NOT NULL,
     updated_when datetime NOT NULL,
     deleted_when datetime NOT NULL DEFAULT '2050-01-01'
 );

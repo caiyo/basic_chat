@@ -77,13 +77,14 @@ def validate_user_login(username, password):
     return None
 
 
-def get_group_messages(groupid, userid, latest_messages=False):
+def get_group_messages(groupid, userid, latest_messages=False, before_message_id=None, limit=50):
     user = User(user_id=userid)
     last_viewed = None
-    if latest_messages:
+
+    if latest_messages and not before_message_id:
         last_viewed = user.get_last_viewed(groupid)
     update_last_viewed(userid, groupid)
-    messages = chat_group_service.get_group_messages(groupid, on_or_after=last_viewed)
+    messages = chat_group_service.get_group_messages(groupid, on_or_after=last_viewed, before_message_id=before_message_id, limit=limit)
     return messages
 
 

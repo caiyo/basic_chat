@@ -3,9 +3,9 @@
     angular.module('main')
     .factory('userservice', userService);
 
-    userService.$inject = ['dataservice', '$window', '$q', 'socketservice'];
+    userService.$inject = ['dataservice', '$window', '$q', 'socketservice', '$timeout'];
 
-    function userService(dataservice, $window, $q, socketservice){
+    function userService(dataservice, $window, $q, socketservice, $timeout){
         var currentUser = {user : null};
 
         return {
@@ -16,7 +16,8 @@
             signup: signup,
             postMessage: postMessage,
             updateGroupViewed : updateGroupViewed,
-            getLatestMessages : getLatestMessages
+            getLatestMessages : getLatestMessages,
+            getOldMessages : getOldMessages
         };
 
         function getCurrentUser(){
@@ -51,7 +52,6 @@
                 .then(function(response){
                     login(username, password);
                 }, function(response){
-                    console.log('failure!', response);
                     return $q.reject(response);
                 });
         }
@@ -78,9 +78,7 @@
 
         function getLoggedInUserSuccess(user){
             setCurrentUser(user);
-            console.log('test');
             socketservice.connect();
-            socketservice.emit('my event', {username : user.username});
         }
 
         function postMessage(msg, callback){
@@ -108,7 +106,6 @@
                 return;
             }
             else{
-                console.log("connecting");
                 if (typeof groups === 'string'){
                     groups = [groups];
                 }
@@ -129,6 +126,20 @@
                 if (msgs)
                     Array.prototype.push.apply(currentUser.user.activeGroup.messages, msgs);
             });
+        }
+
+        function getOldMessages(groupid, beforeMsgId, keepPositioncallback){
+            $timeout(function(){
+                dataservice.getMessages(groupid, beforeMsgId).then(function(msgs){
+                    if (msgs){
+                            Array.prototype.unshift.apply(currentUser.user.activeGroup.messages, msgs);
+                            $timeout(function(){
+                                keepPositioncallback();
+                            });
+                    };
+                });
+            },1000);
+
         }
 
 

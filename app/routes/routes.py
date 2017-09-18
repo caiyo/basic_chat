@@ -74,7 +74,11 @@ def viewed_messages(groupid):
 @jwt_required()
 def get_messages(groupid):
     user_id = current_identity
-    messages = userservice.get_group_messages(groupid, user_id)
+    before_message_id = request.args.get('beforemsgid', None)
+    if before_message_id:
+        limit = 20;
+    limit = request.args.get('limit', limit)
+    messages = userservice.get_group_messages(groupid, user_id, before_message_id=before_message_id, limit=limit)
     return shared.to_json(messages)
 
 

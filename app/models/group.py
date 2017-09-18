@@ -13,8 +13,10 @@ class ChatGroup(BaseModel):
         self.is_public = is_public
         self.created_by = created_by
         self.last_viewed = last_viewed
+
         # Lazy loaded attributes
         self.members = None
+        self.messages = []
 
     def get_members(self):
         if self.members:
@@ -34,7 +36,7 @@ class ChatGroup(BaseModel):
 
         return members
 
-    def get_messages(self, on_or_after=None, limit=50, offset=0):
+    def get_messages(self, on_or_after=None, limit=50, before_message_id=None):
         params = []
         sql = """
             SELECT  cm.message_id as msg_id,
@@ -53,7 +55,15 @@ class ChatGroup(BaseModel):
         limit_clause = ''
         offset_clause = ''
         params.append(self.id)
-        if on_or_after:
+
+        if before_message_id:
+            and_clause = """
+                AND cm.created_when < (SELECT created_when
+                                        FROM chat_message
+                                        WHERE message_id = %s)
+            """
+            params.append(before_message_id)
+        elif on_or_after:
             if isinstance(on_or_after, (datetime, date)):
                 pass
                 # on_or_after = on_or_after.isoformat()
@@ -63,13 +73,9 @@ class ChatGroup(BaseModel):
             limit_clause = "LIMIT %s"
             params.append(limit)
 
-            if offset is not None:
-                offset_clause = "OFFSET %s"
-                params.append(offset)
-
         sql = sql.format(and_clause, limit_clause, offset_clause)
         results = shared.run_sql(sql, tuple(params))
-        msgs = None
+        msgs = []
         if results:
             msgs = [chatMessage.ChatMessage(r['msg'], self.id, r['user_guid'], r['username'], r['msg_id'], r['created_when']) for r in results]
             msgs.sort(key=lambda k: k.created_when)

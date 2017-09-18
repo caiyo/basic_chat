@@ -9,6 +9,27 @@ body{
     background-color: #252830;
 }
 
+.loader-div{
+    display: inline-block;
+    height: 20px;
+    position: absolute;
+    padding-left: 10px;
+}
+.loader{
+    display: inline-block;
+    border: 2px solid #f3f3f3; /* Light grey */
+    border-top: 2px solid #3498db; /* Blue */
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    animation: spin .8s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
 .form-signin {
   max-width: 330px;
   padding: 15px;
@@ -52,7 +73,7 @@ body{
 }
 
 
-#login-alert{
+#main-content .alert{
     position: absolute;
     z-index: 1000;
     width: 50%;
@@ -91,6 +112,7 @@ body{
 
 #chat-page #chat-window{
     padding-left: 0;
+    padding-right: 0;
 }
 
 #chat-page #chat-window #msg-input{
