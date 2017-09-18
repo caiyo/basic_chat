@@ -1,8 +1,10 @@
 from app import app
+import sockets
 from app.services import userservice, shared, chat_group_service
 from app.models.exception import UserExistsException, UserNotCreatedException
 from flask import request, make_response, abort, render_template, session
 from flask_jwt import JWT, jwt_required, current_identity
+import json
 
 @app.route('/')
 def index():
@@ -40,6 +42,8 @@ def create_user():
         # the default group for all users
         general_group = chat_group_service.get_group(group_name='General')
         created_user.join_group(general_group.id)
+        sockets.join_group(created_user, general_group.id)
+
     except UserExistsException as uee:
         return make_response((str(uee), 400, None))
     except UserNotCreatedException as unce:
@@ -81,7 +85,7 @@ def get_messages(groupid):
 def get_messages_latest(groupid):
     user_id = current_identity
     messages = userservice.get_group_messages(groupid, user_id, latest_messages=True)
-    return shared.to_json(messages)
+    return shared.to_json(messages) if messages else ('', 204)
 
 
 def identity(payload):

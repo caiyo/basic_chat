@@ -51,7 +51,8 @@
                 .then(function(response){
                     login(username, password);
                 }, function(response){
-                    $q.reject(reponse);
+                    console.log('failure!', response);
+                    return $q.reject(response);
                 });
         }
 
@@ -114,7 +115,6 @@
                 var groupIds = _.map(groups,
                                         function(o){return o.id;});
                 socketservice.emit('join_room', {
-                    jwt : $window.localStorage.token,
                     groupIds: groupIds
                 });
             }
@@ -126,7 +126,8 @@
 
         function getLatestMessages(groupid){
             dataservice.getLatestMessages(groupid).then(function(msgs){
-                Array.prototype.push.apply(currentUser.user.activeGroup.messages, msgs);
+                if (msgs)
+                    Array.prototype.push.apply(currentUser.user.activeGroup.messages, msgs);
             });
         }
 

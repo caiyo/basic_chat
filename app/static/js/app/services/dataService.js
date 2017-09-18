@@ -38,10 +38,12 @@
                 .then(getSignupComplete, getsignupFail)
 
             function getSignupComplete(response) {
+                console.log("succes signup");
                 return login(username, password);
             }
 
             function getsignupFail(response){
+                console.log("fail signup", response);
                 return $q.reject(response);
             }
         }

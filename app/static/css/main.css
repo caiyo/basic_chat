@@ -46,12 +46,24 @@
     height: 100%;
 }
 
-#chat-page .left-rail{
+#chat-page #left-rail{
     background-color: #e0e0e0;
+    height: 100%;
 }
-#chat-page .left-rail .user-list{
+#chat-page #left-rail .user-list{
     margin: 10px 10px;
     border: 1px solid black;
+}
+
+#chat-page #left-rail .list h3{
+    position: absolute;
+}
+
+#chat-page #left-rail .list .list-content{
+    margin-top: 35px;
+    padding-left: 10px;
+    height: calc(100% - 35px);
+    overflow: auto;
 }
 
 #chat-page #chat-window{
@@ -76,4 +88,11 @@
 #chat-page #chat-window #msg-container{
     height: calc(100% - 70px);
     overflow: auto;
+}
+
+#chat-page #channel-list-container{
+    height: 20%;
+}
+#chat-page #user-list-container{
+    height: 78%;
 }

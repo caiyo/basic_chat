@@ -37,7 +37,6 @@ def test_disconnect():
 @socketio.on('join_room')
 @authenticated_only
 def on_join(data):
-    token = data['jwt']
     userid = session['user_id']
     group_ids = data['groupIds']
     chat_groups = userservice.get_user_chat_groups(userid, include_members=False)
@@ -62,6 +61,15 @@ def post_message(data):
     msg = userservice.post_message(userid, groupid, msg)
     msg = json.loads(shared.to_json(msg))
     emit("new_message", msg, room=groupid)
+
+
+def join_group(user, groupid):
+    user.join_group(groupid)
+    data = {
+        'group_id' : groupid,
+        'user' : user
+    }
+    socketio.emit('new_group_member', json.loads(shared.to_json(data)), room=groupid)
 
 
 def validate_token(token):

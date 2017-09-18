@@ -1,12 +1,16 @@
 <div id='chat-page' class="row">
-    <div class="left-rail col-md-3">
-        <div id="Chanel-list">
+    <div id="left-rail" class="col-md-3">
+        <div id="channel-list-container" class="p-2 list">
             <h3>Channels</h3>
-            <div class="chat-group" ng-repeat="group in chat.currentUser.user.groups" ng-bind="group.group_name"></div>
+            <div id="channel-list" class="list-content" >
+                <div class="chat-group" ng-repeat="group in chat.currentUser.user.groups" ng-bind="group.group_name"></div>
+            </div>
         </div>
-        <div id="user-list">
+        <div id="user-list-container" class="p-2 list">
             <h3>Members</h3>
-            <div ng-repeat="user in chat.currentUser.user.activeGroup.members" ng-bind="user.username"></div>
+            <div id="user-list" class="list-content">
+                <div ng-repeat="user in chat.currentUser.user.activeGroup.members" ng-bind="user.username"></div>
+            </div>
         </div>
 
     </div>
