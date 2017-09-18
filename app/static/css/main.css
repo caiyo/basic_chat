@@ -1,7 +1,12 @@
+body{
+    font-family: helvetica;
+    color: #fff;
+}
 #main-content {
     padding-top: 56px;
     box-sizing: border-box;
     height: 100%;
+    background-color: #252830;
 }
 
 .form-signin {
@@ -42,13 +47,31 @@
   margin-top: 10px;
 }
 
+.blur{
+    filter: blur(2px);
+}
+
+
+#login-alert{
+    position: absolute;
+    z-index: 1000;
+    width: 50%;
+    left: 0;
+    margin-left: auto;
+    right: 0;
+    margin-right: auto;
+    text-align: center;
+}
+
 #chat-page{
     height: 100%;
+    margin-right: 0;
 }
 
 #chat-page #left-rail{
-    background-color: #e0e0e0;
     height: 100%;
+    padding-right: 0;
+    border-right: 1px solid #434857;
 }
 #chat-page #left-rail .user-list{
     margin: 10px 10px;
@@ -67,27 +90,42 @@
 }
 
 #chat-page #chat-window{
-    background-color: #a0a0a0;
+    padding-left: 0;
 }
 
 #chat-page #chat-window #msg-input{
-    border: 1px solid black;
-    width: 90%;
+    width: 98%;
     position: absolute;
     bottom: 10px;
-    background-color: white;
+    left: 0;
+    right: 0;
+    margin-left: auto;
+    margin-right: auto;
 }
 #chat-page #chat-window #msg-input form{
     margin-bottom: 0px;
+    color: white;
 }
 #chat-page #chat-window #msg-input #msg-text{
-    width: 90%;
-    background-color: transparent;
+    width: 94%;
+    background-color: #434857;
+    border: 1px solid rgba(0, 0, 0, 0.15);
+}
+
+#chat-page #chat-window #msg-input #msg-text:focus{
+    color: #555;
+    background-color: #fff;
+    border-color: #fff;
+    outline: none;
 }
 
 #chat-page #chat-window #msg-container{
-    height: calc(100% - 70px);
+    height: calc(100% - 47px);
     overflow: auto;
+}
+
+#chat-page #chat-window #msg-container .msg-item:last-child{
+    margin-bottom: 10px;
 }
 
 #chat-page #channel-list-container{

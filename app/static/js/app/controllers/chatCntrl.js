@@ -7,11 +7,7 @@
 
     function chatCntrl(userservice, socketservice, $scope){
         var vm = this;
-
-
-
         vm.postMsg = postMsg;
-        vm.getTimeStamp = getTimeStamp;
         vm.currentUser = userservice.getCurrentUser();
 
         socketservice.forward('new_message', $scope);
@@ -61,8 +57,5 @@
             $("#msg-container").animate({ scrollTop: $('#msg-container').prop("scrollHeight")}, 500);
         }
 
-        function getTimeStamp(timeString){
-            return moment(timeString).format('MM/DD @ HH:MM')
-        }
     }
 })();

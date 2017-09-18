@@ -1,5 +1,8 @@
-<div id='chat-page' class="row">
-    <div id="left-rail" class="col-md-3">
+<div id="login-alert" class="alert alert-danger" role="alert" ng-if="!chat.currentUser.user">
+    Please login or signup!
+</div>
+<div id='chat-page' class="row" ng-class="{'blur' : !chat.currentUser.user}">
+    <div id="left-rail" class="col-md-2">
         <div id="channel-list-container" class="p-2 list">
             <h3>Channels</h3>
             <div id="channel-list" class="list-content" >
@@ -14,16 +17,10 @@
         </div>
 
     </div>
-    <div id="chat-window" class="col-md-9">
+    <div id="chat-window" class="col-md-10">
         <div id="msg-container">
-            <div ng-repeat="msg in chat.currentUser.user.activeGroup.messages">
-                <div>
-                    <span class="msg-poster" ng-bind="msg.username"></span>
-                    <span class="msg-timestamp" ng-bind="chat.getTimeStamp(msg.created_when)"></span>
-                </div>
-                <div class="msg-content" ng-bind="msg.message">
-
-                </div>
+            <div class="msg-item" ng-repeat="msg in chat.currentUser.user.activeGroup.messages">
+                <chat-message message="msg"></chat-message>
             </div>
         </div>
         <div id="msg-input">

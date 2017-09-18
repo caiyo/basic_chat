@@ -1,0 +1,27 @@
+.chat-message{
+    padding-top: 5px;
+    padding-left: 15px;
+    padding-bottom: 5px;
+}
+.chat-message:hover{
+    background-color: #434857;
+}
+
+.chat-message .msg-content{
+    padding-left: 15px;
+    color: #cfd2da;
+}
+.chat-message .msg-poster{
+    font-weight: bold;
+}
+
+.chat-message .msg-timestamp{
+    color: #e0e0e0;
+    font-size: 12px;
+    padding-left: 10px;
+}
+
+.chat-message:hover .msg-timestamp{
+    color: #a0a0a0;
+
+}

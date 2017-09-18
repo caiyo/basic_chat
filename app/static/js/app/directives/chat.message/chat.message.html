@@ -1,0 +1,8 @@
+<div class="chat-message">
+    <div>
+        <span class="msg-poster" ng-bind="vm.message.username"></span>
+        <span class="msg-timestamp" ng-bind="vm.getTimeStamp(vm.message.created_when)"></span>
+    </div>
+    <div class="msg-content" ng-bind="vm.message.message">
+    </div>
+</div>
