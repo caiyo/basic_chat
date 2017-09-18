@@ -1,5 +1,3 @@
-CREATE DATABASE challenge_kyle;
-
 USE challenge_kyle;
 
 CREATE TABLE user(

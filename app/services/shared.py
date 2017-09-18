@@ -5,6 +5,7 @@ import pymysql.cursors
 import pymysql
 import json
 from datetime import date, datetime
+from app import app
 
 
 def create_salt():
@@ -21,8 +22,8 @@ def b64_encode(str_):
 
 def run_sql(sql, params=None, commit=False, fetchone = False):
     # Connect to the database
-    connection = pymysql.connect(user='root',
-                                 db='challenge_kyle')
+    connection = pymysql.connect(user=app.config['DB_USER'],
+                                 db=app.config['DB_NAME'])
 
     try:
         with connection.cursor(pymysql.cursors.DictCursor) as cursor:
