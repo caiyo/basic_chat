@@ -8,6 +8,7 @@ app.config['SECRET_KEY'] = 'super-secret'
 app.config['JWT_EXPIRATION_DELTA'] = timedelta(days=7)
 app.config['DB_USER'] = 'root'
 app.config['DB_NAME'] = 'challenge_kyle'
+app.config['DB_PASSWORD'] = ''
 
 socketio = SocketIO(app)
 

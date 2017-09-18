@@ -23,7 +23,8 @@ def b64_encode(str_):
 def run_sql(sql, params=None, commit=False, fetchone = False):
     # Connect to the database
     connection = pymysql.connect(user=app.config['DB_USER'],
-                                 db=app.config['DB_NAME'])
+                                 db=app.config['DB_NAME'],
+                                 password=app.config['DB_PASSWORD'])
 
     try:
         with connection.cursor(pymysql.cursors.DictCursor) as cursor:
