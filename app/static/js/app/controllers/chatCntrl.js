@@ -12,6 +12,7 @@
         vm.newUnreadMessages = false;
         vm.scrollToBottom = scrollToBottom;
         vm.loadingMessages = false;
+        vm.noNewMessages = false;
 
         socketservice.forward('new_message', $scope);
         socketservice.forward('socket_connected', $scope);
@@ -91,9 +92,15 @@
                 var currentScrollHeight =  msgContainer.prop('scrollHeight');
                 var previousLocation = currentScrollHeight - currentScrollTop;
 
-                return function(){
+                return function(noNewMessages){
                     msgContainer.scrollTop(msgContainer.prop('scrollHeight') - previousLocation);
                     vm.loadingMessages = false;
+                    if (noNewMessages){
+                        vm.noNewMessages = true;
+                        $timeout(function(){
+                            vm.noNewMessages = false;
+                        }, 1000);
+                    }
                 }
             }
         }

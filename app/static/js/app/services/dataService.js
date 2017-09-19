@@ -53,7 +53,12 @@
             return $http.get('/api/user').then(getUserSucess, getUserFail);
 
             function getUserSucess(response){
-                return response.data
+                if (response.data && response.data.user){
+                    return response.data.user;
+                }
+                else{
+                    return $q.reject(response);
+                }
             }
 
             function getUserFail(response){

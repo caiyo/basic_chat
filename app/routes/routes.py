@@ -25,7 +25,7 @@ def get_user():
 
     # jwt is set for sockets to authenticate
     session['jwt'] = request.headers.get('Authorization').split('JWT ')[1]
-    return shared.to_json(current_user)
+    return shared.to_json({'user' : current_user})
 
 @app.route('/api/user', methods = ['POST'])
 def create_user():
@@ -65,7 +65,7 @@ def get_chat_groups(userid):
 def viewed_messages(groupid):
     user_id = current_identity
     userservice.update_last_viewed(user_id, groupid)
-    return ''
+    return ('', 204)
 
 
 # TODO add validation that userid has access to group

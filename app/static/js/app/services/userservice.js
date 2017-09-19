@@ -134,7 +134,8 @@
                     if (msgs){
                             Array.prototype.unshift.apply(currentUser.user.activeGroup.messages, msgs);
                             $timeout(function(){
-                                keepPositioncallback();
+                                var noNewMessages = msgs.length == 0;
+                                keepPositioncallback(noNewMessages);
                             });
                     };
                 });

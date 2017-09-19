@@ -27,6 +27,9 @@
                 <div class="loader"></div>
             </div>
         </div>
+         <div id="no-message-alert" class="alert alert-danger" role="alert" ng-show="chat.noNewMessages">
+            This is the end of the conversation
+        </div>
         <div id="msg-container">
             <div class="msg-item" ng-repeat="msg in chat.currentUser.user.activeGroup.messages">
                 <chat-message message="msg"></chat-message>

@@ -41,7 +41,7 @@ class User(BaseModel):
         """
 
         results = shared.run_sql(sql, (self.id,))
-        groups = None
+        groups = []
 
         if results:
             groups = [group.ChatGroup(id=row['group_id'], group_name=row['group_name'],
