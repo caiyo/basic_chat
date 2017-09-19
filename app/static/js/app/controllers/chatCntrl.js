@@ -70,6 +70,9 @@
         }
 
         function onLastMessage(){
+            if (!$('.chat-message').length){
+                return true;
+            }
             var lastMsg = $('.chat-message').last();
             if(msgContainer.scrollTop() + msgContainer.height() > msgContainer.prop('scrollHeight') - lastMsg.height()+10) {
                 return true;
