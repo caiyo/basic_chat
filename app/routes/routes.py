@@ -41,7 +41,6 @@ def create_user():
         # After user is created, add them to the 'General' group which is
         # the default group for all users
         general_group = chat_group_service.get_group(group_name='General')
-        created_user.join_group(general_group.id)
         sockets.join_group(created_user, general_group.id)
 
     except UserExistsException as uee:

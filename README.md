@@ -2,8 +2,33 @@
 
 python 2
 
+pip
+
+npm
+
+bower
+
 mysql
 
+# Install Dependencies
+
+pip:
+
+```
+sudo easy_install pip
+```
+
+npm:
+
+```
+brew install node
+```
+
+bower:
+
+```
+npm install bower -g
+```
 
 # Application setup
 
