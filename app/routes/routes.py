@@ -4,7 +4,6 @@ from app.services import userservice, shared, chat_group_service
 from app.models.exception import UserExistsException, UserNotCreatedException
 from flask import request, make_response, abort, render_template, session
 from flask_jwt import JWT, jwt_required, current_identity
-import json
 
 @app.route('/')
 def index():
