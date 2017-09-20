@@ -1,5 +1,5 @@
 from app import app
-import sockets
+from app.routes import sockets
 from app.services import userservice, shared, chat_group_service
 from app.models.exception import UserExistsException, UserNotCreatedException
 from flask import request, make_response, abort, render_template, session
